@@ -1,8 +1,9 @@
 class Square
-  attr_accessor :piece
+  attr_accessor :piece, :colour
 
   def initialize
     @piece = nil
+    @colour = nil
   end
 
   def to_s
@@ -10,32 +11,32 @@ class Square
       return " "
     else
     unicode = " "
-      if @piece[0] == "white"
-        if @piece[1] == "king"
+      if @colour == "white"
+        if  @piece == "king"
           unicode = "\u2654"
-        elsif @piece[1] == "queen"
+        elsif @piece == "queen"
           unicode = "\u2655"
-        elsif @piece[1] == "rook"
+        elsif @piece == "rook"
           unicode = "\u2656"
-        elsif @piece[1] == "bishop"
+        elsif @piece == "bishop"
           unicode = "\u2657"
-        elsif @piece[1] == "knight"
+        elsif @piece == "knight"
           unicode = "u2658"
-        elsif @piece[1] == "pawn"
+        elsif @piece == "pawn"
           unicode = "\u2659"
         end
       else
-        if @piece[1] == "king"
+        if @piece == "king"
           unicode = "\u265A"
-        elsif @piece[1] == "queen"
+        elsif @piece == "queen"
           unicode = "\u265B"
-        elsif @piece[1] == "rook"
+        elsif @piece == "rook"
           unicode = "\u265C"
-        elsif @piece[1] == "bishop"
+        elsif @piece == "bishop"
           unicode = "\u265D"
-        elsif @piece[1] == "knight"
+        elsif @piece == "knight"
           unicode = "u265E"
-        elsif @piece[1] == "pawn"
+        elsif @piece == "pawn"
           unicode = "\u265F"
         end
       end
