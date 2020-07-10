@@ -12,7 +12,7 @@ class Board
     @squares = []
     8.times do
       row_array = []
-      8.times {row_array.append(Square.new)}
+      8.times {row_array.append(Piece.new)}
       @squares.append(row_array)
     end
   end
@@ -39,9 +39,16 @@ class Board
     square = @squares[start_location[0]][start_location[1]]
     square.colour == @turn ? true : false
   end
+
+  def set_piece(location, type, colour)
+    file = location[0]
+    row = location[1]
+    if type == "rook"
+      @squares[file][row] = Rook.new(location, colour)
+    end
+  end
 end
 
 x = Board.new
-x.squares[0][0].colour = "black"
-x.squares[0][0].piece = "rook"
-p x.check_if_player_piece([0,0])
+x.set_piece([0,0], "rook", "black")
+x.draw_board
