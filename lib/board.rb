@@ -1,11 +1,14 @@
 require_relative 'square'
+require_relative 'rook'
+require 'pry'
 
 class Board
-  attr_accessor :squares
+  attr_accessor :squares, :turn
   FILE = "abcdefgh"
   ROW_BORDERS = "   --- --- --- --- --- --- --- --- "
   
   def initialize
+    @turn = "white"
     @squares = []
     8.times do
       row_array = []
@@ -27,4 +30,18 @@ class Board
     end
     puts "    a   b   c   d   e   f   g   h"
   end
+
+  def move_piece(start_location, end_location)
+    check_if_player_piece(start_location)
+  end
+
+  def check_if_player_piece(start_location)
+    square = @squares[start_location[0]][start_location[1]]
+    square.colour == @turn ? true : false
+  end
 end
+
+x = Board.new
+x.squares[0][0].colour = "black"
+x.squares[0][0].piece = "rook"
+p x.check_if_player_piece([0,0])
