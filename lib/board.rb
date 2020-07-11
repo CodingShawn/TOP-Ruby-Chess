@@ -35,6 +35,10 @@ class Board
     check_if_player_piece(start_location)
   end
 
+  def check_move_possible(piece, end_location)
+    piece.possible_moves(which_square_occupied).include? end_location
+  end
+
   def check_if_player_piece(start_location)
     square = @squares[start_location[0]][start_location[1]]
     square.colour == @turn ? true : false
@@ -62,12 +66,12 @@ class Board
         occupied_squares.append(present_pieces_in_row.location)
       end
     end 
-    @occupied_squares = occupied_squares
+    occupied_squares
   end                
 end
 
 x = Board.new
 x.set_piece([0,0], "rook", "black")
-x.set_piece([0,5], "rook", "white")
-x.which_square_occupied
-p x.squares[0][0].possible_moves(x.occupied_squares)
+x.set_piece([6,5], "rook", "white")
+x.set_piece([5,5], "rook", "black")
+p x.check_move_possible(x.squares[6][5],[7,5])
