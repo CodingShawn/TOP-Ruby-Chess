@@ -31,6 +31,7 @@ class Board
   end
 
   def move_piece(start_location, end_location, turn)
+    which_square_occupied
     piece = @squares[start_location[0]][start_location[1]]
     if check_if_player_piece(piece, turn) && check_move_possible(piece, end_location)
       move_to_end_location(piece, end_location, turn)
@@ -46,15 +47,21 @@ class Board
   end
 
   def clear_start_location(piece, start_location)
+    #remove piece at start point
     @squares[start_location[0]][start_location[1]] = Piece.new
   end
 
   def check_move_possible(piece, end_location)
-    piece.possible_moves(which_square_occupied).include? end_location
+    piece.possible_moves(@occupied_squares).include? end_location
   end
 
   def check_if_player_piece(piece, turn)
     piece.colour.eql? turn
+  end
+
+  def check_if_enemy_piece(piece, end_location)
+    other_piece = @squares[end_location[0]][end_location[1]]
+    return piece.colour != other_piece.colour
   end
 
   def set_piece(location, type, colour)
@@ -79,7 +86,7 @@ class Board
         occupied_squares.append(present_pieces_in_row.location)
       end
     end 
-    occupied_squares
+    @occupied_squares = occupied_squares
   end                
 end
 
