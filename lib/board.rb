@@ -34,9 +34,17 @@ class Board
     which_square_occupied
     piece = @squares[start_location[0]][start_location[1]]
     if check_if_player_piece(piece, turn) && check_move_possible(piece, end_location)
+      if @occupied_squares.include? end_location
+        #see if the end location is occupied by other or own colour
+        unless check_if_enemy_piece(piece, end_location)
+          return false #inform Game class move is illegal
+        end
+      end
       move_to_end_location(piece, end_location, turn)
       clear_start_location(piece, start_location)
+      return true #inform Game class move is legal
     end
+    return false
   end
 
   def move_to_end_location(piece, end_location, turn)
@@ -92,10 +100,8 @@ end
 
 x = Board.new
 x.set_piece([0,0], "rook", "black")
-x.set_piece([6,5], "rook", "white")
+x.set_piece([6,5], "rook", "black")
 x.set_piece([5,5], "rook", "black")
 x.draw_board
-x.move_piece([5,5], [5,7], "black")
-x.draw_board
-x.move_piece([0,0], [1,3], "black")
+x.move_piece([5,5], [6,5], "black")
 x.draw_board
