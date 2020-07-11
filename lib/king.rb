@@ -1,4 +1,5 @@
 require_relative 'piece'
+require 'pry'
 
 class King < Piece
   def initialize(location, colour)
@@ -13,3 +14,14 @@ class King < Piece
     #binding.pry
     prevent_off_board_moves(result)
   end
+
+  def to_s
+    unicode = ""
+    if @colour == "white"
+      unicode = "\u2654"
+    else
+      unicode = "\u265A"
+    end
+    unicode.encode('utf-8')
+  end
+end
