@@ -50,9 +50,7 @@ class Board
 
   def move_to_end_location(piece, end_location, turn)
     #create piece at end point
-    if piece.type.eql? "rook"
-      @squares[end_location[0]][end_location[1]] = Rook.new(end_location, turn)
-    end
+    set_piece(end_location, piece.type, turn)
   end
 
   def clear_start_location(piece, start_location)
@@ -100,12 +98,30 @@ class Board
     end 
     @occupied_squares = occupied_squares
   end                
+
+  def check_pieces(turn)
+    one_side_pieces = []
+    #collate all pieces of other player into array
+    for row in @squares
+      one_side_row_pieces = row.filter do |square|
+        if square.colour != turn && square.colour != nil
+          true
+        else
+          false
+        end
+      end
+      unless one_side_row_pieces.empty?
+       one_side_pieces.append(one_side_row_pieces)
+      end
+    end
+    one_side_pieces
+  end
 end
 
 x = Board.new
 x.set_piece([0,0], "rook", "black")
-x.set_piece([6,5], "rook", "black")
+x.set_piece([6,5], "rook", "white")
 x.set_piece([5,5], "king", "black")
 x.draw_board
 #x.move_piece([5,5], [6,5], "black")
-x.draw_board
+p x.check_pieces("white")
