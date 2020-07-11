@@ -1,9 +1,9 @@
-require_relative 'square'
 require_relative 'rook'
 require 'pry'
 
 class Board
   attr_accessor :squares, :turn
+  attr_reader :occupied_squares
   FILE = "abcdefgh"
   ROW_BORDERS = "   --- --- --- --- --- --- --- --- "
   
@@ -47,8 +47,27 @@ class Board
       @squares[file][row] = Rook.new(location, colour)
     end
   end
+
+  def which_square_occupied
+    occupied_squares = []
+    for rows in @squares
+      occupied_row_positions = rows.filter do |square|
+        if square.type.nil?
+          false
+        else
+          true
+        end
+      end
+      for present_pieces_in_row in occupied_row_positions
+        occupied_squares.append(present_pieces_in_row.location)
+      end
+    end 
+    @occupied_squares = occupied_squares
+  end                
 end
 
 x = Board.new
 x.set_piece([0,0], "rook", "black")
-x.draw_board
+x.set_piece([0,5], "rook", "white")
+x.which_square_occupied
+p x.squares[0][0].possible_moves(x.occupied_squares)
