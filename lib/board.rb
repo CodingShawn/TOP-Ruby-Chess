@@ -1,4 +1,5 @@
 require_relative 'rook'
+require_relative 'king'
 require 'pry'
 
 class Board
@@ -75,8 +76,11 @@ class Board
   def set_piece(location, type, colour)
     file = location[0]
     row = location[1]
-    if type == "rook"
+    case type
+    when "rook"
       @squares[file][row] = Rook.new(location, colour)
+    when "king"
+      @squares[file][row] = King.new(location, colour)
     end
   end
 
@@ -101,7 +105,7 @@ end
 x = Board.new
 x.set_piece([0,0], "rook", "black")
 x.set_piece([6,5], "rook", "black")
-x.set_piece([5,5], "rook", "black")
+x.set_piece([5,5], "king", "black")
 x.draw_board
-x.move_piece([5,5], [6,5], "black")
+#x.move_piece([5,5], [6,5], "black")
 x.draw_board
