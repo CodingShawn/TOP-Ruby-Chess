@@ -34,6 +34,7 @@ class Board
     piece = @squares[start_location[0]][start_location[1]]
     if check_if_player_piece(piece, turn) && check_move_possible(piece, end_location)
       move_to_end_location(piece, end_location, turn)
+      clear_start_location(piece, start_location)
     end
   end
 
@@ -42,6 +43,10 @@ class Board
     if piece.type.eql? "rook"
       @squares[end_location[0]][end_location[1]] = Rook.new(end_location, turn)
     end
+  end
+
+  def clear_start_location(piece, start_location)
+    @squares[start_location[0]][start_location[1]] = Piece.new
   end
 
   def check_move_possible(piece, end_location)
@@ -84,4 +89,6 @@ x.set_piece([6,5], "rook", "white")
 x.set_piece([5,5], "rook", "black")
 x.draw_board
 x.move_piece([5,5], [5,7], "black")
+x.draw_board
+x.move_piece([0,0], [1,3], "black")
 x.draw_board
