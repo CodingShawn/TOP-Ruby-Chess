@@ -1,4 +1,5 @@
 require_relative 'piece'
+require 'pry'
 
 class Rook < Piece
   def initialize(location, colour)
@@ -9,14 +10,23 @@ class Rook < Piece
   def is_move_illegal
   end
 
-  def possible_moves
-    result = []
+  def possible_moves(occupied_squares)
+    route1 = []
+    route2 = []
+    route3 = []
+    route4 = []
     for i in 1..8
-      result.append([(@column + i), @row])
-      result.append([(@column - i), @row])
-      result.append([@column, (@row + i)])
-      result.append([@column, (@row - i)])
+      route1.append([(@column + i), @row])
+      route2.append([(@column - i), @row])
+      route3.append([@column, (@row + i)])
+      route4.append([@column, (@row - i)])
     end
+    result = []
+    result.concat(remove_blocked_path(route1, occupied_squares))
+    result.concat(remove_blocked_path(route2, occupied_squares))
+    result.concat(remove_blocked_path(route3, occupied_squares))
+    result.concat(remove_blocked_path(route4, occupied_squares))
+    #binding.pry
     prevent_off_board_moves(result)
   end
 
