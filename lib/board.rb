@@ -8,7 +8,6 @@ class Board
   ROW_BORDERS = "   --- --- --- --- --- --- --- --- "
   
   def initialize
-    @turn = "white"
     @squares = []
     8.times do
       row_array = []
@@ -31,17 +30,18 @@ class Board
     puts "    a   b   c   d   e   f   g   h"
   end
 
-  def move_piece(start_location, end_location)
-    check_if_player_piece(start_location)
+  def move_piece(start_location, end_location, turn)
+    piece = @squares[start_location[0]][start_location[1]]
+    check_if_player_piece(piece, turn)
+    check_move_possible(piece, end_location)
   end
 
   def check_move_possible(piece, end_location)
     piece.possible_moves(which_square_occupied).include? end_location
   end
 
-  def check_if_player_piece(start_location)
-    square = @squares[start_location[0]][start_location[1]]
-    square.colour == @turn ? true : false
+  def check_if_player_piece(piece, turn)
+    piece.colour == turn ? true : false
   end
 
   def set_piece(location, type, colour)
