@@ -5,8 +5,8 @@ class Game
   attr_reader :turn
   def initialize
     @board = Board.new
-    @turn = "white"
-    @other_player = "black"
+    @turn = "black"
+    @other_player = "white"
     @board.draw_board
     play_game
   end
@@ -39,8 +39,8 @@ class Game
     loop do
       begin
         move = gets.chomp.split("")
-        start_location = [move[1].to_i, convert_letter_to_int(move[0])]
-        end_location = [move[4].to_i, convert_letter_to_int(move[3])]
+        start_location = [convert_letter_to_int(move[0]), move[1].to_i]
+        end_location = [convert_letter_to_int(move[3]), move[4].to_i]
         made_move = @board.move_piece(start_location, end_location, @turn)
         return made_move
       rescue
