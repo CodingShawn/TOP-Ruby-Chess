@@ -32,6 +32,7 @@ class Board
   end
 
   def move_piece(start_location, end_location, turn)
+    state_before_move = @squares.clone.map(&:clone) #make a copy of original positions
     which_square_occupied
     piece = @squares[start_location[0]][start_location[1]]
     if check_if_player_piece(piece, turn) && 
@@ -44,7 +45,13 @@ class Board
       end
       move_to_end_location(piece, end_location, turn)
       clear_start_location(piece, start_location)
+      if check_if_move_results_in_check(turn)
+        #rewind move if move results in ownself being checked
+        @squares = state_before_move
+        return false
+      else
       return true #inform Game class move is legal
+      end 
     end
     return false
   end
@@ -60,12 +67,7 @@ class Board
   end
 
   def check_move_possible(piece, end_location, turn)
-    if piece.type == 'king'
-      #if king, have to check if move will cause the king piece to be checked
-      piece.possible_moves(@occupied_squares, opposing_zone_of_control(turn)).include? end_location
-    else
       piece.possible_moves(@occupied_squares).include? end_location
-    end
   end
 
   def check_if_player_piece(piece, turn)
@@ -141,14 +143,24 @@ class Board
     end
     zone_of_control
   end
+
+  def check_if_move_results_in_check(colour)
+    opposing_zone_of_control = opposing_zone_of_control(colour)
+    if colour == "black"
+      current_player_pieces = @black_pieces
+    else
+      current_player_pieces = @white_pieces
+    end
+    current_player_king = current_player_pieces.filter {|piece| piece.type == 'king'}
+    current_player_king_location = current_player_king[0].location
+    opposing_zone_of_control.include? current_player_king_location
+  end
 end
 
 x = Board.new
-x.set_piece([6,0], "rook", "black")
+x.set_piece([6,0], "rook", "white")
 x.set_piece([6,5], "rook", "white")
 x.set_piece([5,6], "king", "black")
-x.which_square_occupied
-p x.opposing_zone_of_control("black")
 x.draw_board
 x.move_piece([5,6], [6,5], "black")
 x.draw_board
