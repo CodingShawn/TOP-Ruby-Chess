@@ -19,8 +19,10 @@ class Board
     set_piece([0,0], "king", "black")
     set_piece([6,0], "rook", "black")
     set_piece([6,4], "rook", "black")
-    set_piece([6,6], "king", "white")
-    set_piece([0,1], "pawn", "black")
+    set_piece([7,6], "king", "white")
+    set_piece([0,6], "pawn", "black")
+    set_piece([1,4], "rook", "white")
+    set_piece([5,6], "pawn", "white")
   end
 
   def draw_board
@@ -51,6 +53,7 @@ class Board
       end
       move_to_end_location(piece, end_location, turn)
       clear_start_location(piece, start_location)
+      check_pawn_promotion(piece, end_location, turn)
       if check_if_move_results_in_check(turn)
         #rewind move if move results in ownself being checked
         @squares = state_before_move
@@ -204,5 +207,18 @@ class Board
     end
     @squares = current_state_of_board
     return moves_that_result_in_check.all? true
+  end
+
+  def check_pawn_promotion(piece, end_location, colour)
+    if piece.type == 'pawn' && (end_location[1] == 0 || end_location[1] == 7)
+      loop do
+        puts "Choose which piece your pawn will be promoted to"
+        new_type = gets.chomp
+        if new_type == "rook"
+          set_piece(end_location, new_type, colour)
+          break
+        end
+      end
+    end
   end
 end
