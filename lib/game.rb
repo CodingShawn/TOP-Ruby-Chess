@@ -6,17 +6,32 @@ class Game
   def initialize
     @board = Board.new
     @turn = "white"
+    @other_player = "black"
     @board.draw_board
     play_game
   end
 
   def play_game
     loop do
-      if make_move
-        break
+      loop do
+        if make_move
+          break
+        end
+        puts "That move is illegal"
+      end
+      @board.draw_board
+      change_turn
+      #change turn first as initially check_move_results_in_check method tests 
+      #if own moves results in own check
+      if @board.check_if_move_results_in_check(@turn)
+        if @board.check_if_checkmake(@other_player)
+          puts "Game is over, #{@turn} has been checkmated!"
+          puts "The #{@other_player} has won!"
+          break
+        end
+        puts "#{@other_player} has checked #{@turn}"
       end
     end
-    @board.draw_board
   end
 
   def make_move
@@ -26,8 +41,8 @@ class Game
         move = gets.chomp.split("")
         start_location = [move[1].to_i, convert_letter_to_int(move[0])]
         end_location = [move[4].to_i, convert_letter_to_int(move[3])]
-        @board.move_piece(start_location, end_location, @turn)
-        break
+        made_move = @board.move_piece(start_location, end_location, @turn)
+        return made_move
       rescue
         puts "Please input move in chess notation format e.g. h5 g1"
       end
@@ -58,8 +73,10 @@ class Game
   def change_turn
     if @turn.eql? "white"
       @turn = "black"
+      @other_player = "white"
     else
       @turn = "white"
+      @other_player = "black"
     end
   end
 end
