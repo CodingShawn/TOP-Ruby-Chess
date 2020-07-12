@@ -132,6 +132,7 @@ class Board
 
   def opposing_zone_of_control(turn)
     check_pieces
+    which_square_occupied
     if turn == "black"
       opposing_pieces = @white_pieces
     else
@@ -155,12 +156,46 @@ class Board
     current_player_king_location = current_player_king[0].location
     opposing_zone_of_control.include? current_player_king_location
   end
+
+  def check_if_checkmake(turn)
+    current_state_of_board = @squares.clone.map(&:clone)
+    check_pieces
+    which_square_occupied
+    moves_that_result_in_check = []
+    if turn == "black"
+      other_player = "white"
+      other_player_pieces = @white_pieces
+    else
+      other_player = "black"
+      other_player_pieces = @black_pieces
+    end
+    for piece in other_player_pieces
+      for possible_move in piece.possible_moves(@occupied_squares)
+        @squares = current_state_of_board.clone.map(&:clone)
+        move_piece(piece.location, possible_move, other_player)
+        moves_that_result_in_check.append(check_if_move_results_in_check(other_player))
+        check_pieces
+        which_square_occupied
+      end
+    end
+    @squares = current_state_of_board
+    return moves_that_result_in_check.all? true
+  end
 end
 
 x = Board.new
-x.set_piece([6,0], "rook", "white")
-x.set_piece([6,5], "rook", "white")
-x.set_piece([5,6], "king", "black")
+x.set_piece([0,0], "king", "black")
+x.set_piece([6,0], "rook", "black")
+x.set_piece([6,4], "rook", "black")
+x.set_piece([6,6], "king", "white")
 x.draw_board
-x.move_piece([5,6], [6,5], "black")
+x.move_piece([6,6], [7,6], "white")
+x.draw_board
+x.move_piece([6,0], [7,0], "black")
+x.draw_board
+p x.check_if_checkmake("black")
+x.draw_board
+x.check_if_checkmake("black")
+x.check_if_checkmake("white")
+#x.move_piece([7,6], [6,5], "white")
 x.draw_board
