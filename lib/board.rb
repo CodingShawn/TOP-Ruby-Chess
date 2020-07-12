@@ -62,7 +62,7 @@ class Board
   def check_move_possible(piece, end_location, turn)
     if piece.type == 'king'
       #if king, have to check if move will cause the king piece to be checked
-      piece.possible_moves(@occupied_squares, zone_of_control(turn)).include? end_location
+      piece.possible_moves(@occupied_squares, opposing_zone_of_control(turn)).include? end_location
     else
       piece.possible_moves(@occupied_squares).include? end_location
     end
@@ -105,12 +105,17 @@ class Board
     @occupied_squares = occupied_squares
   end                
 
-  def check_pieces(turn)
+  def check_pieces
+    @black_pieces = check_pieces_helper("black")
+    @white_pieces = check_pieces_helper("white")
+    #collate each side pieces into array
+  end
+
+  def check_pieces_helper(colour)
     one_side_pieces = []
-    #collate all pieces of other player into array
     for row in @squares
       one_side_row_pieces = row.filter do |square|
-        if square.colour != turn && square.colour != nil
+        if square.colour == colour
           true
         else
           false
@@ -123,8 +128,13 @@ class Board
     one_side_pieces
   end
 
-  def zone_of_control(turn)
-    opposing_pieces = check_pieces(turn)
+  def opposing_zone_of_control(turn)
+    check_pieces
+    if turn == "black"
+      opposing_pieces = @white_pieces
+    else
+      opposing_pieces = @black_pieces
+    end
     zone_of_control = []
     for piece in opposing_pieces
       zone_of_control.concat(piece.possible_moves(@occupied_squares))
@@ -134,10 +144,11 @@ class Board
 end
 
 x = Board.new
-x.set_piece([6,0], "rook", "white")
-x.set_piece([6,5], "rook", "black")
+x.set_piece([6,0], "rook", "black")
+x.set_piece([6,5], "rook", "white")
 x.set_piece([5,6], "king", "black")
 x.which_square_occupied
+p x.opposing_zone_of_control("black")
 x.draw_board
-x.move_piece([5,6], [4,5], "black")
+x.move_piece([5,6], [6,5], "black")
 x.draw_board
