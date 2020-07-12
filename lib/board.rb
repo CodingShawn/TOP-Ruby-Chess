@@ -1,5 +1,6 @@
 require_relative 'rook'
 require_relative 'king'
+require_relative 'pawn'
 require 'pry'
 
 class Board
@@ -11,21 +12,26 @@ class Board
   def initialize
     @squares = []
     8.times do
-      row_array = []
-      8.times {row_array.append(Piece.new)}
-      @squares.append(row_array)
+      column_array = []
+      8.times {column_array.append(Piece.new)}
+      @squares.append(column_array)
     end
+    set_piece([0,0], "king", "black")
+    set_piece([6,0], "rook", "black")
+    set_piece([6,4], "rook", "black")
+    set_piece([6,6], "king", "white")
+    set_piece([0,1], "pawn", "black")
   end
 
   def draw_board
     puts ROW_BORDERS
-    8.times do |row|
-      row_image = "#{row} "
-      8.times do |file|
-        row_image += "| #{@squares[row][file].to_s} "
+    8.times do |column|
+      column_image = "#{column} "
+      8.times do |row|
+        column_image += "| #{@squares[row][column].to_s} "
       end
-      row_image += "|"
-      puts row_image
+      column_image += "|"
+      puts column_image
       puts ROW_BORDERS
     end
     puts "    a   b   c   d   e   f   g   h"
@@ -67,7 +73,21 @@ class Board
   end
 
   def check_move_possible(piece, end_location, turn)
-      piece.possible_moves(@occupied_squares).include? end_location
+      possible_moves_helper(piece, turn).include? end_location
+  end
+
+  def possible_moves_helper(piece, turn)
+    if piece.type == "pawn"
+      check_pieces
+      if turn == "black"
+        opposing_pieces = @white_pieces
+      else
+        opposing_pieces = @black_pieces
+      end
+      piece.possible_moves(@occupied_squares, opposing_pieces)
+    else
+      piece.possible_moves(@occupied_squares)
+    end
   end
 
   def check_if_player_piece(piece, turn)
@@ -87,6 +107,8 @@ class Board
       @squares[file][row] = Rook.new(location, colour)
     when "king"
       @squares[file][row] = King.new(location, colour)
+    when "pawn"
+      @squares[file][row] = Pawn.new(location, colour)
     end
   end
 
@@ -140,12 +162,13 @@ class Board
     end
     zone_of_control = []
     for piece in opposing_pieces
-      zone_of_control.concat(piece.possible_moves(@occupied_squares))
+      zone_of_control.concat(possible_moves_helper(piece, turn))
     end
     zone_of_control
   end
 
   def check_if_move_results_in_check(colour)
+    #This method checks if player making the turn has been checked as a result of own move
     opposing_zone_of_control = opposing_zone_of_control(colour)
     if colour == "black"
       current_player_pieces = @black_pieces
@@ -158,6 +181,7 @@ class Board
   end
 
   def check_if_checkmake(turn)
+    #The method checks if player making the turn has checked mate the opposing player
     current_state_of_board = @squares.clone.map(&:clone)
     check_pieces
     which_square_occupied
@@ -170,7 +194,7 @@ class Board
       other_player_pieces = @black_pieces
     end
     for piece in other_player_pieces
-      for possible_move in piece.possible_moves(@occupied_squares)
+      for possible_move in possible_moves_helper(piece, turn)
         @squares = current_state_of_board.clone.map(&:clone)
         move_piece(piece.location, possible_move, other_player)
         moves_that_result_in_check.append(check_if_move_results_in_check(other_player))
@@ -182,20 +206,3 @@ class Board
     return moves_that_result_in_check.all? true
   end
 end
-
-x = Board.new
-x.set_piece([0,0], "king", "black")
-x.set_piece([6,0], "rook", "black")
-x.set_piece([6,4], "rook", "black")
-x.set_piece([6,6], "king", "white")
-x.draw_board
-x.move_piece([6,6], [7,6], "white")
-x.draw_board
-x.move_piece([6,0], [7,0], "black")
-x.draw_board
-p x.check_if_checkmake("black")
-x.draw_board
-x.check_if_checkmake("black")
-x.check_if_checkmake("white")
-#x.move_piece([7,6], [6,5], "white")
-x.draw_board
