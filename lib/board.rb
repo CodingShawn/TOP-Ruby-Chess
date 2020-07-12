@@ -34,7 +34,8 @@ class Board
   def move_piece(start_location, end_location, turn)
     which_square_occupied
     piece = @squares[start_location[0]][start_location[1]]
-    if check_if_player_piece(piece, turn) && check_move_possible(piece, end_location)
+    if check_if_player_piece(piece, turn) && 
+       check_move_possible(piece, end_location, turn)
       if @occupied_squares.include? end_location
         #see if the end location is occupied by other or own colour
         unless check_if_enemy_piece(piece, end_location)
@@ -58,8 +59,13 @@ class Board
     @squares[start_location[0]][start_location[1]] = Piece.new
   end
 
-  def check_move_possible(piece, end_location)
-    piece.possible_moves(@occupied_squares).include? end_location
+  def check_move_possible(piece, end_location, turn)
+    if piece.type == 'king'
+      #if king, have to check if move will cause the king piece to be checked
+      piece.possible_moves(@occupied_squares, zone_of_control(turn)).include? end_location
+    else
+      piece.possible_moves(@occupied_squares).include? end_location
+    end
   end
 
   def check_if_player_piece(piece, turn)
@@ -128,9 +134,10 @@ class Board
 end
 
 x = Board.new
-x.set_piece([0,0], "rook", "black")
-x.set_piece([6,5], "rook", "white")
-x.set_piece([5,5], "king", "black")
+x.set_piece([6,0], "rook", "white")
+x.set_piece([6,5], "rook", "black")
+x.set_piece([5,6], "king", "black")
 x.which_square_occupied
 x.draw_board
-p x.zone_of_control("white")
+x.move_piece([5,6], [4,5], "black")
+x.draw_board
