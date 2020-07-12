@@ -111,10 +111,19 @@ class Board
         end
       end
       unless one_side_row_pieces.empty?
-       one_side_pieces.append(one_side_row_pieces)
+       one_side_pieces.concat(one_side_row_pieces)
       end
     end
     one_side_pieces
+  end
+
+  def zone_of_control(turn)
+    opposing_pieces = check_pieces(turn)
+    zone_of_control = []
+    for piece in opposing_pieces
+      zone_of_control.concat(piece.possible_moves(@occupied_squares))
+    end
+    zone_of_control
   end
 end
 
@@ -122,6 +131,6 @@ x = Board.new
 x.set_piece([0,0], "rook", "black")
 x.set_piece([6,5], "rook", "white")
 x.set_piece([5,5], "king", "black")
+x.which_square_occupied
 x.draw_board
-#x.move_piece([5,5], [6,5], "black")
-p x.check_pieces("white")
+p x.zone_of_control("white")
