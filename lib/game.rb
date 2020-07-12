@@ -11,16 +11,27 @@ class Game
   end
 
   def play_game
-    make_move
+    loop do
+      if make_move
+        break
+      end
+    end
     @board.draw_board
   end
 
   def make_move
     puts "Its #{@turn} turn to make a move"
-    move = gets.chomp.split("")
-    start_location = [convert_letter_to_int(move[0]), move[1].to_i]
-    end_location = [convert_letter_to_int(move[3]), move[4].to_i]
-    @board.move_piece(start_location, end_location, @turn)
+    loop do
+      begin
+        move = gets.chomp.split("")
+        start_location = [move[1].to_i, convert_letter_to_int(move[0])]
+        end_location = [move[4].to_i, convert_letter_to_int(move[3])]
+        @board.move_piece(start_location, end_location, @turn)
+        break
+      rescue
+        puts "Please input move in chess notation format e.g. h5 g1"
+      end
+    end 
   end
 
   def convert_letter_to_int(letter)
