@@ -44,7 +44,7 @@ class Board
   def draw_board
     puts ROW_BORDERS
     8.times do |column|
-      column_image = "#{column} "
+      column_image = "#{8 - column} "
       8.times do |row|
         column_image += "| #{@squares[row][column].to_s} "
       end
