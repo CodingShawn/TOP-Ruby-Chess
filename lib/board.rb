@@ -1,6 +1,7 @@
 require_relative 'rook'
 require_relative 'king'
 require_relative 'pawn'
+require_relative 'knight'
 require 'pry'
 
 class Board
@@ -21,7 +22,7 @@ class Board
     set_piece([6,4], "rook", "black")
     set_piece([7,6], "king", "white")
     set_piece([0,6], "pawn", "black")
-    set_piece([1,4], "rook", "white")
+    set_piece([1,4], "knight", "white")
     set_piece([5,6], "pawn", "white")
   end
 
@@ -112,6 +113,8 @@ class Board
       @squares[file][row] = King.new(location, colour)
     when "pawn"
       @squares[file][row] = Pawn.new(location, colour)
+    when "knight"
+      @squares[file][row] = Knight.new(location, colour)
     end
   end
 
@@ -214,7 +217,7 @@ class Board
       loop do
         puts "Choose which piece your pawn will be promoted to"
         new_type = gets.chomp
-        if new_type == "rook"
+        if new_type == "rook" || new_type == "knight"
           set_piece(end_location, new_type, colour)
           break
         end
