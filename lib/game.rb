@@ -39,8 +39,9 @@ class Game
     loop do
       begin
         move = gets.chomp.split("")
-        start_location = [convert_letter_to_int(move[0]), move[1].to_i]
-        end_location = [convert_letter_to_int(move[3]), move[4].to_i]
+        start_location = [convert_letter_to_int(move[0]), 8 - move[1].to_i] 
+        #used 8 -move[x] so that command from player will be auto translated to correct array represented on board
+        end_location = [convert_letter_to_int(move[3]), 8 - move[4].to_i]
         made_move = @board.move_piece(start_location, end_location, @turn)
         return made_move
       rescue
