@@ -19,14 +19,26 @@ class Board
       8.times {column_array.append(Piece.new)}
       @squares.append(column_array)
     end
-    set_piece([0,0], "king", "black")
-    set_piece([6,0], "rook", "black")
-    set_piece([5,4], "rook", "black")
-    set_piece([7,6], "king", "white")
-    set_piece([0,6], "pawn", "black")
-    set_piece([1,4], "knight", "white")
-    set_piece([5,6], "queen", "white")
-    set_piece([3,6], "bishop", "black")
+    8.times do |i|
+      set_piece([i, 1], "pawn", "black")
+      set_piece([i, 6], "pawn", "white")
+    end
+    set_piece([0, 0], "rook", "black")
+    set_piece([7, 0], "rook", "black")
+    set_piece([0, 7], "rook", "white")
+    set_piece([7, 7], "rook", "white")
+    set_piece([1, 0], "knight", "black")
+    set_piece([6, 0], "knight", "black")
+    set_piece([1, 7], "knight", "white")
+    set_piece([6, 7], "knight", "white")
+    set_piece([2, 0], "bishop", "black")
+    set_piece([5, 0], "bishop", "black")
+    set_piece([2, 7], "bishop", "white")
+    set_piece([5, 7], "bishop", "white")
+    set_piece([3, 0], "queen", "black")
+    set_piece([3, 7], "queen", "white")
+    set_piece([4, 0], "king", "black")
+    set_piece([4, 7], "king", "white")
   end
 
   def draw_board
