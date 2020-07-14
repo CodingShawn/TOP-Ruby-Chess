@@ -193,6 +193,7 @@ class Board
   end
 
   def check_if_move_results_in_check(colour)
+    check_pieces
     #This method checks if player making the turn has been checked as a result of own move
     opposing_zone_of_control = opposing_zone_of_control(colour)
     if colour == "black"
@@ -219,7 +220,7 @@ class Board
       other_player_pieces = @black_pieces
     end
     for piece in other_player_pieces
-      for possible_move in possible_moves_helper(piece, turn)
+      for possible_move in possible_moves_helper(piece, other_player)
         @squares = current_state_of_board.clone.map(&:clone)
         move_piece(piece.location, possible_move, other_player)
         moves_that_result_in_check.append(check_if_move_results_in_check(other_player))
