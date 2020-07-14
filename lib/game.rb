@@ -1,12 +1,11 @@
 require_relative 'board'
-require 'pry'
 
 class Game
   attr_reader :turn
   def initialize
     @board = Board.new
-    @turn = "black"
-    @other_player = "white"
+    @turn = "white"
+    @other_player = "black"
     @board.draw_board
     play_game
   end
