@@ -1,5 +1,4 @@
 require_relative 'piece'
-require 'pry'
 
 class King < Piece
   def initialize(location, colour)
@@ -15,7 +14,6 @@ class King < Piece
   end
 
   def to_s
-    unicode = ""
     if @colour == "black"
       unicode = "\u2654"
     else
