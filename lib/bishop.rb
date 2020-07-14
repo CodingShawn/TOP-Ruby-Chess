@@ -1,0 +1,34 @@
+class Bishop < Pawn
+  def initialize(location, colour)
+    super(location, colour)
+    @type = "bishop"
+  end
+
+  def possible_moves(occupied_squares)
+    route1 = []
+    route2 = []
+    route3 = []
+    route4 = []
+    for i in 1..7
+      route1.append([@column + i, @row + i])
+      route2.append([@column - i, @row + i])
+      route3.append([@column + i, @row - i])
+      route4.append([@column - i, @row - i])
+    end
+    result = []
+    result.concat(remove_blocked_path(route1, occupied_squares))
+    result.concat(remove_blocked_path(route2, occupied_squares))
+    result.concat(remove_blocked_path(route3, occupied_squares))
+    result.concat(remove_blocked_path(route4, occupied_squares))
+    prevent_off_board_moves(result)
+  end
+
+  def to_s
+    if @colour == "black"
+      unicode = "\u2657"
+    else
+      unicode = "\u265D"
+    end
+    unicode.encode('utf-8')
+  end
+end
