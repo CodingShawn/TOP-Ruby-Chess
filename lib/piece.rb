@@ -13,9 +13,6 @@ class Piece
     is_move_legal ? end_location : @location
   end
 
-  def is_move_legal
-  end
-
   def possible_moves(occupied_squares)
   end
 
