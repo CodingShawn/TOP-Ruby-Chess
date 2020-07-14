@@ -1,6 +1,6 @@
 class Piece
   attr_accessor :type
-  attr_reader :location
+  attr_reader :location, :colour
   def initialize(location = [99,99], colour = nil)
     @type = nil
     @location = location
