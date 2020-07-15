@@ -1,11 +1,13 @@
 require_relative 'board'
+require 'yaml'
 
 class Game
   attr_reader :turn
-  def initialize
-    @board = Board.new
-    @turn = "white"
-    @other_player = "black"
+  
+  def initialize(board = Board.new, turn = "white", other_player = "black")
+    @board = board
+    @turn = turn
+    @other_player = other_player
     @board.draw_board
     play_game
   end
@@ -37,7 +39,19 @@ class Game
     puts "Its #{@turn} turn to make a move"
     loop do
       begin
-        move = gets.chomp.split("")
+        input = gets.chomp
+        if input == "save"
+          save_game
+          puts "Its #{@turn} turn to make a move"
+          input = gets.chomp
+          break
+        elsif input == "load"
+          load_game
+          puts "Its #{@turn} turn to make a move"
+          input = gets.chomp
+          break
+        end
+        move = input.split("")
         start_location = [convert_letter_to_int(move[0]), 8 - move[1].to_i] 
         #used 8 -move[x] so that command from player will be auto translated to correct array represented on board
         end_location = [convert_letter_to_int(move[3]), 8 - move[4].to_i]
@@ -78,6 +92,28 @@ class Game
       @turn = "white"
       @other_player = "black"
     end
+  end
+
+  def save_game
+    save_string = YAML.dump ({
+      :board => @board,
+      :turn => @turn,
+      :other_player => @other_player
+    })
+    save_file = File.open("../save.txt", "w")
+    save_file.puts save_string
+    puts "Game has been saved!"
+  end
+
+  def load_game
+    saved_game = File.open("../save.txt", "r")
+    saved_string = saved_game.read 
+    data = YAML.load saved_string
+    @board = data[:board]
+    @turn = data[:turn]
+    @other_player = data[:other_player]
+    puts "Game loaded!"
+    @board.draw_board
   end
 end
 
